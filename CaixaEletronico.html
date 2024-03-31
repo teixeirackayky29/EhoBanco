@@ -1,0 +1,168 @@
+<html>
+
+<head>
+
+	<script>
+		var saldo = 100.5; //Float
+
+		function seunome() {
+			var nome;
+			do {
+				//SE O USUARIO DIGITAR UM NUMERO OU ALGO VAZIO
+				nome = prompt('Qual é seu nome? ')
+			} while (!isNaN(nome) || nome === '')
+			return nome
+		}
+
+
+
+		function inicio() {
+
+			var nome = seunome();
+			alert('Olá ' + nome + ', é um prazer ter você por aqui');
+
+			var escolha = parseInt(prompt('Selecione uma opção:\n1.) Saldo\n2.) Extrato\n3.) Saque\n4.) Depósito\n5.) Transferência\n6.) Sair'));
+			var senha = parseInt(prompt('Digite sua senha: '))
+
+
+			if (senha == 3589) {
+				switch (escolha) {
+					case 1:
+						ver_saldo();
+						break;
+					case 2:
+						ver_extrato();
+						inicio()
+						break;
+					case 3:
+						fazer_saque();
+						break;
+					case 4:
+						fazer_deposito();
+						break;
+					case 5:
+						fazer_transferencia()
+						break;
+					case 6:
+						sair();
+						break;
+					default:
+						erro();
+						break;
+				}
+
+			} else {
+				alert("Senha incorreta! Tente novamente.")
+				inicio();
+			}
+		}
+
+		function ver_saldo() {
+			alert('Seu saldo atual é: R$ ' + saldo);
+			inicio();
+		}
+
+		var extrato = [];
+
+		function fazer_deposito() {
+
+			var deposito = parseFloat(prompt('Qual o valor para depósito?'));
+			if (isNaN(deposito) || deposito <= 0) {
+				alert('Por favor, informe um número válido maior que zero para o depósito.');
+				fazer_deposito();
+			} else {
+				saldo += deposito;
+				extrato.push({
+					tipo: 'deposito',
+					valor: deposito,
+					data: new Date(),
+				});
+				ver_saldo();
+			}
+		}
+
+		function fazer_saque() {
+
+			var saque = parseFloat(prompt('Qual o valor para saque?'));
+			if (isNaN(saque) || saque === '' || saque <= 0) {
+				// Se o usuario digitar um caractere diferente de numero ele vai aparecer essa mensagem.
+				alert('Por favor, informe um número válido.');
+				fazer_saque();
+			} else if (saque > saldo) {
+				// caso o usuario digite um valor acima do que tem na sua conta aparecera essa mensagem.
+				alert(
+					'Operação não autorizada. Saldo insuficiente para o saque solicitado.'
+				);
+				fazer_saque();
+			} else {
+				saldo -= saque;
+				extrato.push({
+					tipo: 'saque',
+					valor: saque,
+					data: new Date(),
+				});
+				ver_saldo();
+			}
+		}
+
+		function ver_extrato() {
+
+			var mensagem = 'Extrato:\n'
+			for (var i = 0; i < extrato.length; i++) {
+				var transacao = extrato[i]
+		
+				mensagem += `\n${transacao.data.toLocaleDateString()} - ${transacao.tipo}: ${transacao.valor.toFixed(2)}`
+			}
+			alert(mensagem)
+			inicio();
+		}
+
+		function fazer_transferencia() {
+
+
+			var contaDestino = parseInt(prompt('Informe o número da conta para transferência: '));
+			var valorTransferencia = parseFloat(prompt('Qual o valor da transferência? '));
+
+			if (isNaN(contaDestino) || isNaN(valorTransferencia) || valorTransferencia <= 0) {
+				alert('Por favor, informe um número de conta válido e um valor de transferência válido.');
+				fazer_transferencia();
+			} else if (valorTransferencia > saldo) {
+				alert('Operação não autorizada. Saldo insuficiente para a transferência solicitada.');
+			} else {
+				saldo -= valorTransferencia;
+				extrato.push({
+					tipo: 'transferência',
+					valor: valorTransferencia,
+					conta_destino: contaDestino,
+					data: new Date(),
+				});
+				alert("Transferência realizada com sucesso!");
+				ver_saldo();
+			}
+		}
+
+		function erro() {
+			alert('Por favor, informe um número entre 1 e 6');
+			inicio();
+		}
+
+		function sair() {
+			var confirma = confirm('Você deseja sair?');
+			alert( nome +`,  foi um prazer ter você por aqui!`)
+			if (confirma) {
+				window.close();
+			} else {
+				inicio();
+			}
+		}
+
+
+		inicio()
+	</script>
+</head>
+
+<body>
+
+</body>
+
+</html>
